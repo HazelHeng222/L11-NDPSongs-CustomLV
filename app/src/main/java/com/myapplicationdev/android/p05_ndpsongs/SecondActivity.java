@@ -23,7 +23,7 @@ public class SecondActivity extends AppCompatActivity {
     Button btn5Stars;
     ArrayList<String> years;
     Spinner spinner;
-    ArrayAdapter spinnerAdapter;
+    ArrayAdapter<String> spinnerAdapter;
 
     @Override
     protected  void onResume() {
@@ -50,6 +50,7 @@ public class SecondActivity extends AppCompatActivity {
 
 		DBHelper dbh = new DBHelper(this);
         songList = dbh.getAllSongs();
+        years = dbh.getYears();
         dbh.close();
 
         adapter = new CustomAdapter(this, R.layout.row, songList);
@@ -75,13 +76,16 @@ public class SecondActivity extends AppCompatActivity {
         });
     }
 
-    /*
-    years = dbh.getYears();
+
     spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, years);
+    spinner.setAdapter(spinnerAdapter);
+
     spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()){
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            DBHelper dbh = new DBHelper(Integer.valueOf(years.get(position)));
+            DBHelper dbh = new DBHelper(SecondActivity.this);
+            songList.clear();
+            songList.addAll(dbh.getAllSongsByYear(Integer.valueOf(years.get(position))));
             adapter.notifyDataSetChanged();
         }
 
@@ -89,9 +93,8 @@ public class SecondActivity extends AppCompatActivity {
                 public void onNothingSelected(AdapterView<?> parent) {
 
         }
-    });
+    };
 
-     */
 
 
 

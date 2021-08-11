@@ -133,7 +133,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String selectQuery = "SELECT DISTINCT " + COLUMN_YEAR + " FROM " + TABLE_SONG;
 
 		Cursor cursor;
-		cursor = db.query(true, TABLE_SONG, columns , null , null, null, null, null);
+		cursor = db.query( TABLE_SONG,columns ,selectQuery  , null , null, null, null, null);
 		if (cursor.moveToFirst()){
 			do {
 				codes.add(cursor.getString(0));
@@ -158,11 +158,23 @@ public class DBHelper extends SQLiteOpenHelper {
 		Cursor cursor;
 		cursor = db.query(TABLE_SONG, columns, condition, args, null, null, null, null);
 
+		// Loop through all rows and add to ArrayList
 		if (cursor.moveToFirst()) {
 			do {
 				int id = cursor.getInt(0);
-			}
+				String title = cursor.getString(1);
+				String singers = cursor.getString(2);
+				int year = cursor.getInt(3);
+				int stars = cursor.getInt(4);
+
+				Song newSong = new Song(id, title, singers, year, stars);
+				songArrayList.add(newSong);
+			} while (cursor.moveToNext());
 		}
+		// Close connection
+		cursor.close();
+		db.close();
+		return songArrayList;
 	}
 
 	public int updateSong(Song data){
@@ -188,5 +200,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return result;
     }
+
+
 
 }
